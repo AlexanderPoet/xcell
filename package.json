@@ -1,0 +1,19 @@
+{
+  "name": "xcell",
+  "version": "1.0.0",
+  "description": "tight",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexanderPoet/xcell.git"
+  },
+  "author": "Po",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AlexanderPoet/xcell/issues"
+  },
+  "homepage": "https://github.com/AlexanderPoet/xcell#readme"
+}
