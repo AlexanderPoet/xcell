@@ -4,7 +4,9 @@
   "description": "tight",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "jest",
+    "build": "browserify client/js/app.js > public/js/bundle.js",
+    "watch": "watchify client/js/app.js -o public/js/bundle.js"
   },
   "repository": {
     "type": "git",
@@ -18,5 +20,10 @@
   "homepage": "https://github.com/AlexanderPoet/xcell#readme",
   "dependencies": {
     "express": "^4.15.2"
+  },
+  "devDependencies": {
+    "browserify": "^14.3.0",
+    "jest": "^19.0.2",
+    "watchify": "^3.9.0"
   }
 }
