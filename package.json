@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/AlexanderPoet/xcell/issues"
   },
-  "homepage": "https://github.com/AlexanderPoet/xcell#readme"
+  "homepage": "https://github.com/AlexanderPoet/xcell#readme",
+  "dependencies": {
+    "express": "^4.15.2"
+  }
 }
