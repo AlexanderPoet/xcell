@@ -4,7 +4,7 @@ const { createTH,
         removeChildren} = require('./dom-util.js');
 const { getLetterRange,
         sumOf, 
-        fishForNumbers} = require('./array-util.js');
+        filterNonNumbers} = require('./array-util.js');
 
 class TableView{
     constructor(model) {
@@ -93,7 +93,7 @@ class TableView{
 
     calculateSums(column) {
         const data = this.model.getColumnValues(column);
-        const numbers = fishForNumbers(data);
+        const numbers = filterNonNumbers(data);
         const sum = sumOf(numbers);
         this.renderSum(column, sum);
     }

@@ -13,13 +13,13 @@ const sumOf = (arr) => {
         return arr.reduce(((total, x) => total + x), 0);
     }
 
-const fishForNumbers = (arr) => {
+const filterNonNumbers = (arr) => {
         return arr.map(x => Number(x))
                   .filter(x => !(isNaN(x)));
     }
 
 module.exports = {
-    fishForNumbers: fishForNumbers,
+    filterNonNumbers: filterNonNumbers,
     sumOf: sumOf,
     getRange: getRange,
     getLetterRange: getLetterRange

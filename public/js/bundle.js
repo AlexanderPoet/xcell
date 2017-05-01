@@ -21,13 +21,13 @@ const sumOf = (arr) => {
         return arr.reduce(((total, x) => total + x), 0);
     }
 
-const fishForNumbers = (arr) => {
+const filterNonNumbers = (arr) => {
         return arr.map(x => Number(x))
                   .filter(x => !(isNaN(x)));
     }
 
 module.exports = {
-    fishForNumbers: fishForNumbers,
+    filterNonNumbers: filterNonNumbers,
     sumOf: sumOf,
     getRange: getRange,
     getLetterRange: getLetterRange
@@ -93,7 +93,7 @@ const { createTH,
         removeChildren} = require('./dom-util.js');
 const { getLetterRange,
         sumOf, 
-        fishForNumbers} = require('./array-util.js');
+        filterNonNumbers} = require('./array-util.js');
 
 class TableView{
     constructor(model) {
@@ -182,7 +182,7 @@ class TableView{
 
     calculateSums(column) {
         const data = this.model.getColumnValues(column);
-        const numbers = fishForNumbers(data);
+        const numbers = filterNonNumbers(data);
         const sum = sumOf(numbers);
         this.renderSum(column, sum);
     }

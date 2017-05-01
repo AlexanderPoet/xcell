@@ -1,7 +1,7 @@
 const { getRange,
         getLetterRange,
         sumOf,
-        fishForNumbers } = require('../array-util.js');
+        filterNonNumbers } = require('../array-util.js');
 
 describe('array-util', () => {
 
@@ -17,9 +17,9 @@ describe('array-util', () => {
         });
     });
 
-    describe('fishForNumbers()', () => {
+    describe('filterNonNumbers()', () => {
         it('pulls out numbers from array', () => {
-            expect(fishForNumbers(['blah',5,5, { bo: 'boo'}])).toEqual([5,5]);
+            expect(filterNonNumbers(['blah',5,5, { bo: 'boo'}])).toEqual([5,5]);
         });
     });
 
