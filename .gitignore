@@ -1,4 +1,4 @@
 node_modules
-bundle.js
+public/js/bundle.js
 *.swp
 *.swo
