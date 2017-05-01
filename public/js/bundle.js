@@ -88,6 +88,7 @@ class TableView{
     initDOMReferences() {
         this.headerRowEl = document.querySelector('THEAD TR');
         this.sheetBodyEl = document.querySelector('TBODY');
+        this.footie = document.querySelector('TFOOT');
         this.formulaBarEl = document.querySelector('#formula-bar');
     }
 
@@ -99,6 +100,7 @@ class TableView{
     renderTable() {
         this.renderTableHeader();
         this.renderTableBody();
+        this.renderFooter();
     }
 
     renderTableHeader() {
@@ -144,10 +146,43 @@ class TableView{
         this.formulaBarEl.addEventListener('keyup', this.handleFormulaBarChange.bind(this));
     }
 
+    renderSum(collie, total) {
+        const whichColumn = document.querySelector(`#sum-${collie}`);
+        whichColumn.textContent = total;
+    }
+
+    sums(column) {
+        let that = this;
+        const rowies = this.model.numRows;
+        function cb(i, memo) {
+            if (i < rowies) {
+                let pos = { col: column, row: i}
+                memo.push(that.model.getValue(pos));
+                return cb(i+=1, memo);
+            }
+            return memo;
+        }
+        let inputsArr = cb(0, [])
+        let total = inputsArr.map(x => Number(x))
+                             .filter(x => !(isNaN(x)))
+                             .reduce(((total, x) => total+=x),0);
+        
+        this.renderSum(column, total);
+    }
+
+    renderFooter() {
+        for (let col = 0; col < this.model.numCols; col++) {
+            const td = createTD();
+            td.id = `sum-${col}`;
+            this.footie.appendChild(td);
+        }
+    }
+
     handleFormulaBarChange(eve) {
         const value = this.formulaBarEl.value;
         this.model.setValue(this.currentCellLocation, value);
         this.renderTableBody();
+        this.sums(this.currentCellLocation.col);
     }
 
     handleSheetClick(eve) {
