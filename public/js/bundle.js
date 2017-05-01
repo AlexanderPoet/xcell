@@ -88,6 +88,7 @@ class TableView{
     initDOMReferences() {
         this.headerRowEl = document.querySelector('THEAD TR');
         this.sheetBodyEl = document.querySelector('TBODY');
+        this.footie = document.querySelector('TFOOT');
         this.formulaBarEl = document.querySelector('#formula-bar');
     }
 
@@ -99,6 +100,7 @@ class TableView{
     renderTable() {
         this.renderTableHeader();
         this.renderTableBody();
+        this.renderFooter();
     }
 
     renderTableHeader() {
@@ -144,10 +146,50 @@ class TableView{
         this.formulaBarEl.addEventListener('keyup', this.handleFormulaBarChange.bind(this));
     }
 
+    renderSum(collie, total) {
+        const whichColumn = document.querySelector(`#sum-${collie}`);
+        whichColumn.textContent = total;
+    }
+    
+    sumOf(arr) {
+        return arr.reduce(((total, x) => total+=x),0);
+    }
+
+    fishForNumbers(arr) {
+        return arr.map(x => Number(x))
+                  .filter(x => !(isNaN(x)));
+    }
+
+    getAllDataInColumn(col, inc, memo) {
+        const rowCount = this.model.numRows;
+        if (inc < rowCount) {
+            const pos = { col: col, row: inc };
+            memo.push(this.model.getValue(pos));
+            return this.getAllDataInColumn(col, inc+=1, memo)
+        }
+        return memo;
+    }
+
+    calculateSums(column) {
+        const data = this.getAllDataInColumn(column, 0, []);
+        const numbers = this.fishForNumbers(data);
+        const sum = this.sumOf(numbers);
+        this.renderSum(column, sum);
+    }
+
+    renderFooter() {
+        for (let col = 0; col < this.model.numCols; col++) {
+            const td = createTD();
+            td.id = `sum-${col}`;
+            this.footie.appendChild(td);
+        }
+    }
+
     handleFormulaBarChange(eve) {
         const value = this.formulaBarEl.value;
         this.model.setValue(this.currentCellLocation, value);
         this.renderTableBody();
+        this.calculateSums(this.currentCellLocation.col);
     }
 
     handleSheetClick(eve) {
