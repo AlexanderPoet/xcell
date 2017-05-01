@@ -13,6 +13,14 @@ class TableModel {
     setValue(location, value) {
         this.data[this._getCellId(location)] = value;
     }
+    getColumnValues(column) {
+        const values = [];
+        for (let i = 0; i < this.numRows; i++) {
+            let pos = { col: column, row: i };
+            values.push(this.getValue(pos));
+        }
+        return values;
+    }
 }
 
 module.exports = TableModel;

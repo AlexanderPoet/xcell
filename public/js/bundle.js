@@ -18,7 +18,7 @@ const getLetterRange = (firstletter = 'A', numLetters) => {
 }
 
 const sumOf = (arr) => {
-        return arr.reduce(((total, x) => total+=x),0);
+        return arr.reduce(((total, x) => total + x), 0);
     }
 
 const fishForNumbers = (arr) => {
@@ -75,6 +75,14 @@ class TableModel {
     setValue(location, value) {
         this.data[this._getCellId(location)] = value;
     }
+    getColumnValues(column) {
+        const values = [];
+        for (let i = 0; i < this.numRows; i++) {
+            let pos = { col: column, row: i };
+            values.push(this.getValue(pos));
+        }
+        return values;
+    }
 }
 
 module.exports = TableModel;
@@ -101,7 +109,7 @@ class TableView{
     initDOMReferences() {
         this.headerRowEl = document.querySelector('THEAD TR');
         this.sheetBodyEl = document.querySelector('TBODY');
-        this.footie = document.querySelector('TFOOT');
+        this.footerRowEl = document.querySelector('TFOOT');
         this.formulaBarEl = document.querySelector('#formula-bar');
     }
 
@@ -158,13 +166,13 @@ class TableView{
         for (let col = 0; col < this.model.numCols; col++) {
             const td = createTD();
             td.id = `sum-${col}`;
-            this.footie.appendChild(td);
+            this.footerRowEl.appendChild(td);
         }
     }
 
-    renderSum(collie, total) {
-        const whichColumn = document.querySelector(`#sum-${collie}`);
-        whichColumn.textContent = total;
+    renderSum(column, total) {
+        const footerCell = document.querySelector(`#sum-${column}`);
+        footerCell.textContent = total;
     }
 
     attachEventHandlers() {
@@ -172,18 +180,8 @@ class TableView{
         this.formulaBarEl.addEventListener('keyup', this.handleFormulaBarChange.bind(this));
     }
 
-    getAllDataInColumn(col, inc, memo) {
-        const rowCount = this.model.numRows;
-        if (inc < rowCount) {
-            const pos = { col: col, row: inc };
-            memo.push(this.model.getValue(pos));
-            return this.getAllDataInColumn(col, inc+=1, memo)
-        }
-        return memo;
-    }
-
     calculateSums(column) {
-        const data = this.getAllDataInColumn(column, 0, []);
+        const data = this.model.getColumnValues(column);
         const numbers = fishForNumbers(data);
         const sum = sumOf(numbers);
         this.renderSum(column, sum);

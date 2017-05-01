@@ -10,7 +10,7 @@ const getLetterRange = (firstletter = 'A', numLetters) => {
 }
 
 const sumOf = (arr) => {
-        return arr.reduce(((total, x) => total+=x),0);
+        return arr.reduce(((total, x) => total + x), 0);
     }
 
 const fishForNumbers = (arr) => {
