@@ -162,14 +162,14 @@ class TableView{
         }
     }
 
-    attachEventHandlers() {
-        this.sheetBodyEl.addEventListener('click', this.handleSheetClick.bind(this));
-        this.formulaBarEl.addEventListener('keyup', this.handleFormulaBarChange.bind(this));
-    }
-
     renderSum(collie, total) {
         const whichColumn = document.querySelector(`#sum-${collie}`);
         whichColumn.textContent = total;
+    }
+
+    attachEventHandlers() {
+        this.sheetBodyEl.addEventListener('click', this.handleSheetClick.bind(this));
+        this.formulaBarEl.addEventListener('keyup', this.handleFormulaBarChange.bind(this));
     }
 
     getAllDataInColumn(col, inc, memo) {
