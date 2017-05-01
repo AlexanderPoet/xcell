@@ -17,7 +17,18 @@ const getLetterRange = (firstletter = 'A', numLetters) => {
            .map((char) => String.fromCharCode(char)); 
 }
 
+const sumOf = (arr) => {
+        return arr.reduce(((total, x) => total + x), 0);
+    }
+
+const fishForNumbers = (arr) => {
+        return arr.map(x => Number(x))
+                  .filter(x => !(isNaN(x)));
+    }
+
 module.exports = {
+    fishForNumbers: fishForNumbers,
+    sumOf: sumOf,
     getRange: getRange,
     getLetterRange: getLetterRange
 }
@@ -64,6 +75,14 @@ class TableModel {
     setValue(location, value) {
         this.data[this._getCellId(location)] = value;
     }
+    getColumnValues(column) {
+        const values = [];
+        for (let i = 0; i < this.numRows; i++) {
+            let pos = { col: column, row: i };
+            values.push(this.getValue(pos));
+        }
+        return values;
+    }
 }
 
 module.exports = TableModel;
@@ -72,7 +91,9 @@ const { createTH,
         createTD,
         createTR,
         removeChildren} = require('./dom-util.js');
-const { getLetterRange } = require('./array-util.js');
+const { getLetterRange,
+        sumOf, 
+        fishForNumbers} = require('./array-util.js');
 
 class TableView{
     constructor(model) {
@@ -88,6 +109,7 @@ class TableView{
     initDOMReferences() {
         this.headerRowEl = document.querySelector('THEAD TR');
         this.sheetBodyEl = document.querySelector('TBODY');
+        this.footerRowEl = document.querySelector('TFOOT');
         this.formulaBarEl = document.querySelector('#formula-bar');
     }
 
@@ -99,6 +121,7 @@ class TableView{
     renderTable() {
         this.renderTableHeader();
         this.renderTableBody();
+        this.renderFooter();
     }
 
     renderTableHeader() {
@@ -139,15 +162,36 @@ class TableView{
         this.sheetBodyEl.appendChild(fragment);
     }
 
+    renderFooter() {
+        for (let col = 0; col < this.model.numCols; col++) {
+            const td = createTD();
+            td.id = `sum-${col}`;
+            this.footerRowEl.appendChild(td);
+        }
+    }
+
+    renderSum(column, total) {
+        const footerCell = document.querySelector(`#sum-${column}`);
+        footerCell.textContent = total;
+    }
+
     attachEventHandlers() {
         this.sheetBodyEl.addEventListener('click', this.handleSheetClick.bind(this));
         this.formulaBarEl.addEventListener('keyup', this.handleFormulaBarChange.bind(this));
+    }
+
+    calculateSums(column) {
+        const data = this.model.getColumnValues(column);
+        const numbers = fishForNumbers(data);
+        const sum = sumOf(numbers);
+        this.renderSum(column, sum);
     }
 
     handleFormulaBarChange(eve) {
         const value = this.formulaBarEl.value;
         this.model.setValue(this.currentCellLocation, value);
         this.renderTableBody();
+        this.calculateSums(this.currentCellLocation.col);
     }
 
     handleSheetClick(eve) {

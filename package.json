@@ -4,9 +4,11 @@
   "description": "tight",
   "main": "index.js",
   "scripts": {
+    "postinstall": "browserify client/js/app.js -o public/js/bundle.js",
     "test": "jest",
     "build": "browserify client/js/app.js > public/js/bundle.js",
-    "watch": "watchify client/js/app.js -o public/js/bundle.js"
+    "watch": "watchify client/js/app.js -o public/js/bundle.js",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -19,7 +21,8 @@
   },
   "homepage": "https://github.com/AlexanderPoet/xcell#readme",
   "dependencies": {
-    "express": "^4.15.2"
+    "express": "^4.15.2",
+    "browserify": "^14.3.0"
   },
   "devDependencies": {
     "browserify": "^14.3.0",

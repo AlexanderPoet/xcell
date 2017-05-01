@@ -98,4 +98,34 @@ describe('table-view', () => {
 
         });
     });
+
+    describe('renderFooter()', () => {
+        it('made the correct number of tds', () => {
+            const numCols = 2;
+            const numRows = 2;
+            const model = new TableModel(numCols, numRows);
+            const view = new TableView(model);
+            view.init();
+
+            let tFootTds = document.querySelectorAll("TD[id^='sum']");
+            expect(tFootTds.length).toBe(numCols);
+        });
+    });
+
+    describe('renderSum()', () => {
+        it('displays the correct sum', () => {
+            const numCols = 2;
+            const numRows = 2;
+            const model = new TableModel(numCols, numRows);
+            const view = new TableView(model);
+            model.setValue({col: 0, row: 0}, '4');
+            model.setValue({col: 0, row: 1}, '4');
+            view.init();
+            //formulaBarChange also triggers summing.
+            view.handleFormulaBarChange();
+
+            let tfTd = document.querySelector(`#sum-0`).textContent;
+            expect(tfTd).toBe('8');
+        });
+    });
 });
