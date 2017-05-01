@@ -9,7 +9,18 @@ const getLetterRange = (firstletter = 'A', numLetters) => {
            .map((char) => String.fromCharCode(char)); 
 }
 
+const sumOf = (arr) => {
+        return arr.reduce(((total, x) => total + x), 0);
+    }
+
+const filterNonNumbers = (arr) => {
+        return arr.map(x => Number(x))
+                  .filter(x => !(isNaN(x)));
+    }
+
 module.exports = {
+    filterNonNumbers: filterNonNumbers,
+    sumOf: sumOf,
     getRange: getRange,
     getLetterRange: getLetterRange
 }
