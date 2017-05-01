@@ -150,24 +150,31 @@ class TableView{
         const whichColumn = document.querySelector(`#sum-${collie}`);
         whichColumn.textContent = total;
     }
+    
+    sumOf(arr) {
+        return arr.reduce(((total, x) => total+=x),0);
+    }
 
-    sums(column) {
-        let that = this;
-        const rowies = this.model.numRows;
-        function cb(i, memo) {
-            if (i < rowies) {
-                let pos = { col: column, row: i}
-                memo.push(that.model.getValue(pos));
-                return cb(i+=1, memo);
-            }
-            return memo;
+    fishForNumbers(arr) {
+        return arr.map(x => Number(x))
+                  .filter(x => !(isNaN(x)));
+    }
+
+    getAllDataInColumn(col, inc, memo) {
+        const rowCount = this.model.numRows;
+        if (inc < rowCount) {
+            const pos = { col: col, row: inc };
+            memo.push(this.model.getValue(pos));
+            return this.getAllDataInColumn(col, inc+=1, memo)
         }
-        let inputsArr = cb(0, [])
-        let total = inputsArr.map(x => Number(x))
-                             .filter(x => !(isNaN(x)))
-                             .reduce(((total, x) => total+=x),0);
-        
-        this.renderSum(column, total);
+        return memo;
+    }
+
+    calculateSums(column) {
+        const data = this.getAllDataInColumn(column, 0, []);
+        const numbers = this.fishForNumbers(data);
+        const sum = this.sumOf(numbers);
+        this.renderSum(column, sum);
     }
 
     renderFooter() {
@@ -182,7 +189,7 @@ class TableView{
         const value = this.formulaBarEl.value;
         this.model.setValue(this.currentCellLocation, value);
         this.renderTableBody();
-        this.sums(this.currentCellLocation.col);
+        this.calculateSums(this.currentCellLocation.col);
     }
 
     handleSheetClick(eve) {
