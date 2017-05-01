@@ -2,7 +2,9 @@ const { createTH,
         createTD,
         createTR,
         removeChildren} = require('./dom-util.js');
-const { getLetterRange } = require('./array-util.js');
+const { getLetterRange,
+        sumOf, 
+        fishForNumbers} = require('./array-util.js');
 
 class TableView{
     constructor(model) {
@@ -71,6 +73,14 @@ class TableView{
         this.sheetBodyEl.appendChild(fragment);
     }
 
+    renderFooter() {
+        for (let col = 0; col < this.model.numCols; col++) {
+            const td = createTD();
+            td.id = `sum-${col}`;
+            this.footie.appendChild(td);
+        }
+    }
+
     attachEventHandlers() {
         this.sheetBodyEl.addEventListener('click', this.handleSheetClick.bind(this));
         this.formulaBarEl.addEventListener('keyup', this.handleFormulaBarChange.bind(this));
@@ -79,15 +89,6 @@ class TableView{
     renderSum(collie, total) {
         const whichColumn = document.querySelector(`#sum-${collie}`);
         whichColumn.textContent = total;
-    }
-    
-    sumOf(arr) {
-        return arr.reduce(((total, x) => total+=x),0);
-    }
-
-    fishForNumbers(arr) {
-        return arr.map(x => Number(x))
-                  .filter(x => !(isNaN(x)));
     }
 
     getAllDataInColumn(col, inc, memo) {
@@ -102,17 +103,9 @@ class TableView{
 
     calculateSums(column) {
         const data = this.getAllDataInColumn(column, 0, []);
-        const numbers = this.fishForNumbers(data);
-        const sum = this.sumOf(numbers);
+        const numbers = fishForNumbers(data);
+        const sum = sumOf(numbers);
         this.renderSum(column, sum);
-    }
-
-    renderFooter() {
-        for (let col = 0; col < this.model.numCols; col++) {
-            const td = createTD();
-            td.id = `sum-${col}`;
-            this.footie.appendChild(td);
-        }
     }
 
     handleFormulaBarChange(eve) {
